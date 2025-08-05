@@ -259,27 +259,40 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const video = await storage.getBackgroundVideo();
       if (video) {
         res.set('Content-Type', video.mimeType);
+        res.set('Cache-Control', 'public, max-age=3600'); // Кэшируем на 1 час
+        res.set('Content-Length', Buffer.byteLength(video.data, 'base64').toString());
+        
         const buffer = Buffer.from(video.data, 'base64');
         res.send(buffer);
       } else {
         res.status(404).json({ message: "Видео не найдено" });
       }
     } catch (error) {
+      console.error("Video fetch error:", error);
       res.status(500).json({ message: "Ошибка получения видео" });
     }
   });
 
   app.post("/api/admin/upload-video", requireAuth, async (req, res) => {
     try {
+      console.log("Upload request received, body size:", JSON.stringify(req.body).length);
+      
       const data = insertVideoSchema.parse(req.body);
+      console.log("Schema validation passed");
+      
       const video = await storage.createVideo(data);
+      console.log("Video created in storage");
+      
       await storage.updateBackgroundVideo(video.id);
-      res.json({ message: "Видео загружено", video });
+      console.log("Background video updated");
+      
+      res.json({ message: "Видео загружено", video: { id: video.id, filename: video.filename } });
     } catch (error) {
+      console.error("Video upload error:", error);
       if (error instanceof z.ZodError) {
-        res.status(400).json({ message: "Неверные данные видео" });
+        res.status(400).json({ message: "Неверные данные видео", errors: error.errors });
       } else {
-        res.status(500).json({ message: "Ошибка загрузки видео" });
+        res.status(500).json({ message: "Ошибка загрузки видео", error: error.message });
       }
     }
   });

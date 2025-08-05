@@ -76,10 +76,10 @@ export default function VideoManager() {
         return;
       }
       
-      if (file.size > 25 * 1024 * 1024) { // 25MB limit
+      if (file.size > 10 * 1024 * 1024) { // 10MB limit for Netlify
         toast({
           title: "Ошибка",
-          description: "Размер файла не должен превышать 25MB",
+          description: "Размер файла не должен превышать 10MB",
           variant: "destructive",
         });
         return;
@@ -137,7 +137,7 @@ export default function VideoManager() {
               </Button>
             </div>
             <p className="text-sm text-gray-500 mt-1">
-              Поддерживаемые форматы: MP4, WebM, MOV. Максимальный размер: 25MB
+              Поддерживаемые форматы: MP4, WebM, MOV. Максимальный размер: 10MB
             </p>
           </div>
 

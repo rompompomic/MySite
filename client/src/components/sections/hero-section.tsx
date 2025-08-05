@@ -37,7 +37,7 @@ export default function HeroSection() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button
               onClick={scrollToContact}
-              className="bg-black text-white px-8 py-4 text-16 font-semibold hover:bg-gray-800 transition-colors"
+              className="bg-black px-8 py-4 font-semibold hover:bg-gray-800 transition-colors text-[#ffffff]"
             >
               Связаться
             </Button>

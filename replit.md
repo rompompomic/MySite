@@ -2,6 +2,8 @@
 
 This is a minimalist portfolio landing page built for John Wayne, featuring a clean design with an integrated admin panel and Telegram integration. The application is designed for deployment on Netlify with a PostgreSQL database backend. The portfolio includes sections for personal information, video showcase, work portfolio, services, and contact forms, all manageable through a password-protected admin interface.
 
+**Project Status**: Ready for deployment with comprehensive README.md documentation and Netlify configuration.
+
 # User Preferences
 
 Preferred communication style: Simple, everyday language.
@@ -36,6 +38,12 @@ The application uses PostgreSQL with the following main entities:
 - **File Management**: Image URLs stored as text references (external hosting expected)
 - **Video Management**: Background video configurable via URL through admin settings
 - **Ordering System**: Portfolio items and services include order fields for custom arrangement
+
+## Deployment & Documentation
+- **README.md**: Comprehensive deployment guide with step-by-step Netlify setup instructions
+- **Database Setup**: Multiple external PostgreSQL options (Neon, Supabase, Railway) with SQL initialization scripts
+- **Environment Variables**: Clear documentation for all required secrets and configuration
+- **Troubleshooting**: Common deployment issues and solutions documented
 
 ## Responsive Design
 - **Mobile-First**: Tailwind CSS breakpoints ensure mobile compatibility

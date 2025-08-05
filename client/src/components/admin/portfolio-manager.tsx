@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { Plus, Edit, Trash2 } from "lucide-react";
@@ -18,6 +19,8 @@ export default function PortfolioManager() {
     description: "",
     imageUrl: "",
     order: "0",
+    hasLink: false,
+    linkUrl: "",
   });
 
   const { toast } = useToast();
@@ -34,7 +37,7 @@ export default function PortfolioManager() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/portfolio"] });
       setIsAdding(false);
-      setFormData({ title: "", description: "", imageUrl: "", order: "0" });
+      setFormData({ title: "", description: "", imageUrl: "", order: "0", hasLink: false, linkUrl: "" });
       toast({
         title: "Успешно",
         description: "Работа добавлена",
@@ -56,7 +59,7 @@ export default function PortfolioManager() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/portfolio"] });
       setEditingId(null);
-      setFormData({ title: "", description: "", imageUrl: "", order: "0" });
+      setFormData({ title: "", description: "", imageUrl: "", order: "0", hasLink: false, linkUrl: "" });
       toast({
         title: "Успешно",
         description: "Работа обновлена",
@@ -107,6 +110,8 @@ export default function PortfolioManager() {
       description: item.description,
       imageUrl: item.imageUrl,
       order: item.order,
+      hasLink: item.hasLink || false,
+      linkUrl: item.linkUrl || "",
     });
     setIsAdding(false);
   };
@@ -114,13 +119,21 @@ export default function PortfolioManager() {
   const handleCancel = () => {
     setIsAdding(false);
     setEditingId(null);
-    setFormData({ title: "", description: "", imageUrl: "", order: "0" });
+    setFormData({ title: "", description: "", imageUrl: "", order: "0", hasLink: false, linkUrl: "" });
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData(prev => ({
       ...prev,
       [e.target.name]: e.target.value,
+    }));
+  };
+
+  const handleSwitchChange = (checked: boolean) => {
+    setFormData(prev => ({
+      ...prev,
+      hasLink: checked,
+      linkUrl: checked ? prev.linkUrl : "",
     }));
   };
 
@@ -183,6 +196,27 @@ export default function PortfolioManager() {
                 required
               />
             </div>
+            <div className="flex items-center space-x-2">
+              <Switch
+                id="hasLink"
+                checked={formData.hasLink}
+                onCheckedChange={handleSwitchChange}
+              />
+              <Label htmlFor="hasLink">Добавить ссылку</Label>
+            </div>
+            {formData.hasLink && (
+              <div>
+                <Label htmlFor="linkUrl">URL ссылки</Label>
+                <Input
+                  id="linkUrl"
+                  name="linkUrl"
+                  value={formData.linkUrl}
+                  onChange={handleChange}
+                  placeholder="https://example.com"
+                  required={formData.hasLink}
+                />
+              </div>
+            )}
             <div className="flex gap-2">
               <Button 
                 type="submit" 

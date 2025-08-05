@@ -10,7 +10,7 @@ import AdminLayout from "@/components/admin/admin-layout";
 import ProfileEditor from "@/components/admin/profile-editor";
 import PortfolioManager from "@/components/admin/portfolio-manager";
 import ServicesManager from "@/components/admin/services-manager";
-import VideoManager from "@/components/admin/video-manager";
+import VideoFileManager from "@/components/admin/video-file-manager";
 import ContactsManager from "@/components/admin/contacts-manager";
 import { Lock } from "lucide-react";
 
@@ -72,7 +72,7 @@ export default function Admin() {
     <AdminLayout onLogout={logout}>
       <div className="space-y-8">
         <ProfileEditor />
-        <VideoManager />
+        <VideoFileManager />
         <PortfolioManager />
         <ServicesManager />
         <ContactsManager />

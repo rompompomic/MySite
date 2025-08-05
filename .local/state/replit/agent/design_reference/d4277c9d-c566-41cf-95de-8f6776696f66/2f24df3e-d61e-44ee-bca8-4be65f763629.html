@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>John Wayne - Персональное Портфолио</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'montserrat': ['Montserrat', 'sans-serif'],
+                    },
+                    fontSize: {
+                        '50': '50px',
+                        '30': '30px',
+                        '24': '24px',
+                        '16': '16px',
+                        '15': '15px',
+                    },
+                    fontWeight: {
+                        'regular': '400',
+                        'semibold': '600',
+                        'extrabold': '800',
+                    }
+                }
+            }
+        };
+    </script>
+</head>
+<body class="font-montserrat bg-gray-50">
+
+    <!-- @COMPONENT: Header [Navigation with admin access] -->
+    <header class="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-sm border-b border-gray-200">
+        <nav class="container mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <div class="text-24 font-extrabold text-black">
+                    <span data-bind="user.firstName">John</span> <span data-bind="user.lastName">Wayne</span>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="#about" class="text-16 font-regular hover:text-gray-600 transition-colors">Обо мне</a>
+                    <a href="#portfolio" class="text-16 font-regular hover:text-gray-600 transition-colors">Портфолио</a>
+                    <a href="#services" class="text-16 font-regular hover:text-gray-600 transition-colors">Услуги</a>
+                    <a href="#contact" class="text-16 font-regular hover:text-gray-600 transition-colors">Контакты</a>
+                </div>
+                <button class="md:hidden text-24">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </nav>
+    </header>
+    <!-- @END_COMPONENT: Header -->
+
+    <!-- @COMPONENT: HeroSection [Full screen about section] -->
+    <section id="about" class="min-h-screen flex items-center justify-center bg-white pt-20">
+        <div class="container mx-auto px-6 text-center">
+            <div class="max-w-4xl mx-auto">
+                <h1 class="text-50 font-extrabold text-black mb-6 leading-tight">
+                    <span data-bind="user.firstName" data-mock="true">John</span> 
+                    <span data-bind="user.lastName" data-mock="true">Wayne</span>
+                </h1>
+                <p class="text-24 font-regular text-gray-600 mb-8 leading-relaxed" data-bind="user.description" data-mock="true">
+                    Профессиональный веб-разработчик и дизайнер с опытом создания современных цифровых решений. 
+                    Специализируюсь на разработке пользовательских интерфейсов и создании незабываемого пользовательского опыта.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <button class="bg-black text-white px-8 py-4 text-16 font-semibold hover:bg-gray-800 transition-colors" 
+                            data-event="click:handleContact" data-implementation="Open contact form modal">
+                        Связаться
+                    </button>
+                    <button class="border-2 border-black text-black px-8 py-4 text-16 font-semibold hover:bg-black hover:text-white transition-colors"
+                            data-event="click:scrollToPortfolio">
+                        Узнать больше
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: HeroSection -->
+
+    <!-- @COMPONENT: VideoSection [Full screen background video] -->
+    <section class="min-h-screen relative overflow-hidden bg-black flex items-center justify-center">
+        <!-- Background texture for when video is not loaded -->
+        <!-- White ripple texture spreading across black background -->
+        <div class="absolute inset-0 opacity-30" 
+             style="background-image: url('https://images.unsplash.com/photo-1557804506-669a67965ba0?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1920&h=1080'); 
+                    background-size: cover; background-position: center; filter: invert(1) contrast(2);">
+        </div>
+        
+        <!-- Video overlay - placeholder for admin-managed video -->
+        <video class="absolute inset-0 w-full h-full object-cover" autoplay muted loop data-implementation="Admin can replace this video">
+            <!-- TODO: Implement video upload/replacement functionality -->
+            <source src="" type="video/mp4" data-bind="settings.backgroundVideo">
+        </video>
+        
+        <div class="relative z-10 text-center text-white">
+            <h2 class="text-50 font-extrabold mb-4" data-mock="true">В Процессе Работы</h2>
+            <p class="text-24 font-regular" data-mock="true">Создание. Инновации. Результат.</p>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: VideoSection -->
+
+    <!-- @COMPONENT: PortfolioSection [Portfolio grid with admin management] -->
+    <section id="portfolio" class="py-20 bg-gray-50">
+        <div class="container mx-auto px-6">
+            <h2 class="text-50 font-extrabold text-center text-black mb-16">Мои Работы</h2>
+            
+            <!-- @MAP: portfolioItems.map(item => ( -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow group" data-mock="true">
+                    <!-- Modern web application dashboard interface with clean design -->
+                    <img src="https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&h=600" 
+                         alt="Portfolio project 1" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300">
+                    <div class="p-6">
+                        <h3 class="text-24 font-semibold text-black mb-2" data-bind="item.title">Веб-приложение Dashboard</h3>
+                        <p class="text-16 font-regular text-gray-600" data-bind="item.description">Современная панель управления с интуитивным интерфейсом</p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow group" data-mock="true">
+                    <!-- Mobile app interface showing sleek user experience design -->
+                    <img src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&h=600" 
+                         alt="Portfolio project 2" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300">
+                    <div class="p-6">
+                        <h3 class="text-24 font-semibold text-black mb-2" data-bind="item.title">Мобильное Приложение</h3>
+                        <p class="text-16 font-regular text-gray-600" data-bind="item.description">Интерактивное приложение с современным UX/UI дизайном</p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow group" data-mock="true">
+                    <!-- E-commerce website layout with product showcase -->
+                    <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&h=600" 
+                         alt="Portfolio project 3" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300">
+                    <div class="p-6">
+                        <h3 class="text-24 font-semibold text-black mb-2" data-bind="item.title">E-commerce Платформа</h3>
+                        <p class="text-16 font-regular text-gray-600" data-bind="item.description">Полнофункциональный интернет-магазин с системой оплаты</p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow group" data-mock="true">
+                    <!-- Corporate website with professional business design -->
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&h=600" 
+                         alt="Portfolio project 4" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300">
+                    <div class="p-6">
+                        <h3 class="text-24 font-semibold text-black mb-2" data-bind="item.title">Корпоративный Сайт</h3>
+                        <p class="text-16 font-regular text-gray-600" data-bind="item.description">Представительский сайт с современным дизайном</p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow group" data-mock="true">
+                    <!-- Portfolio website design showing creative layout -->
+                    <img src="https://images.unsplash.com/photo-1586717791821-3f44a563fa4c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&h=600" 
+                         alt="Portfolio project 5" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300">
+                    <div class="p-6">
+                        <h3 class="text-24 font-semibold text-black mb-2" data-bind="item.title">Дизайн Портфолио</h3>
+                        <p class="text-16 font-regular text-gray-600" data-bind="item.description">Персональное портфолио с уникальным дизайном</p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow group" data-mock="true">
+                    <!-- SaaS application interface with modern dashboard -->
+                    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&h=600" 
+                         alt="Portfolio project 6" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300">
+                    <div class="p-6">
+                        <h3 class="text-24 font-semibold text-black mb-2" data-bind="item.title">SaaS Приложение</h3>
+                        <p class="text-16 font-regular text-gray-600" data-bind="item.description">Облачное решение для управления проектами</p>
+                    </div>
+                </div>
+            </div>
+            <!-- @END_MAP )) -->
+        </div>
+    </section>
+    <!-- @END_COMPONENT: PortfolioSection -->
+
+    <!-- @COMPONENT: ServicesSection [Expandable service cards] -->
+    <section id="services" class="py-20 bg-white">
+        <div class="container mx-auto px-6">
+            <h2 class="text-50 font-extrabold text-center text-black mb-16">Мои Услуги</h2>
+            
+            <!-- @MAP: services.map(service => ( -->
+            <div class="max-w-4xl mx-auto space-y-6">
+                <div class="bg-gray-50 rounded-lg overflow-hidden" data-mock="true">
+                    <button class="w-full p-6 text-left flex justify-between items-center hover:bg-gray-100 transition-colors"
+                            data-event="click:toggleService" data-implementation="Toggle service card expansion">
+                        <h3 class="text-24 font-semibold text-black" data-bind="service.title">Веб-разработка</h3>
+                        <i class="fas fa-chevron-down text-black transition-transform" data-state="collapsed"></i>
+                    </button>
+                    <div class="px-6 pb-6 hidden" data-state="service-content">
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <h4 class="text-16 font-semibold text-black mb-2">Что входит в услугу:</h4>
+                                <ul class="text-15 font-regular text-gray-600 space-y-1" data-bind="service.includes" data-mock="true">
+                                    <li>• Разработка сайта с нуля</li>
+                                    <li>• Адаптивная верстка</li>
+                                    <li>• SEO оптимизация</li>
+                                    <li>• Интеграция с CMS</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="text-16 font-semibold text-black mb-2">Для кого:</h4>
+                                <p class="text-15 font-regular text-gray-600 mb-4" data-bind="service.targetAudience" data-mock="true">
+                                    Малый и средний бизнес, стартапы, частные предприниматели
+                                </p>
+                                <h4 class="text-16 font-semibold text-black mb-2">Формат работы:</h4>
+                                <p class="text-15 font-regular text-gray-600 mb-4" data-bind="service.workFormat" data-mock="true">
+                                    Удаленно, с еженедельными созвонами и отчетами о прогрессе
+                                </p>
+                                <h4 class="text-16 font-semibold text-black mb-2">Стоимость:</h4>
+                                <p class="text-16 font-semibold text-black" data-bind="service.price" data-mock="true">от 50 000 ₽</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-gray-50 rounded-lg overflow-hidden" data-mock="true">
+                    <button class="w-full p-6 text-left flex justify-between items-center hover:bg-gray-100 transition-colors"
+                            data-event="click:toggleService">
+                        <h3 class="text-24 font-semibold text-black" data-bind="service.title">UI/UX Дизайн</h3>
+                        <i class="fas fa-chevron-down text-black transition-transform"></i>
+                    </button>
+                    <div class="px-6 pb-6 hidden">
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <h4 class="text-16 font-semibold text-black mb-2">Что входит в услугу:</h4>
+                                <ul class="text-15 font-regular text-gray-600 space-y-1" data-mock="true">
+                                    <li>• Анализ пользователей</li>
+                                    <li>• Создание wireframes</li>
+                                    <li>• Дизайн интерфейса</li>
+                                    <li>• Прототипирование</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="text-16 font-semibold text-black mb-2">Для кого:</h4>
+                                <p class="text-15 font-regular text-gray-600 mb-4" data-mock="true">
+                                    IT-компании, продуктовые команды, стартапы
+                                </p>
+                                <h4 class="text-16 font-semibold text-black mb-2">Формат работы:</h4>
+                                <p class="text-15 font-regular text-gray-600 mb-4" data-mock="true">
+                                    Гибридно: удаленно + встречи для презентации концепций
+                                </p>
+                                <h4 class="text-16 font-semibold text-black mb-2">Стоимость:</h4>
+                                <p class="text-16 font-semibold text-black" data-mock="true">от 80 000 ₽</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-gray-50 rounded-lg overflow-hidden" data-mock="true">
+                    <button class="w-full p-6 text-left flex justify-between items-center hover:bg-gray-100 transition-colors"
+                            data-event="click:toggleService">
+                        <h3 class="text-24 font-semibold text-black" data-bind="service.title">Консультации</h3>
+                        <i class="fas fa-chevron-down text-black transition-transform"></i>
+                    </button>
+                    <div class="px-6 pb-6 hidden">
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <h4 class="text-16 font-semibold text-black mb-2">Что входит в услугу:</h4>
+                                <ul class="text-15 font-regular text-gray-600 space-y-1" data-mock="true">
+                                    <li>• Аудит существующих решений</li>
+                                    <li>• Стратегия развития</li>
+                                    <li>• Техническое планирование</li>
+                                    <li>• Рекомендации по улучшению</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="text-16 font-semibold text-black mb-2">Для кого:</h4>
+                                <p class="text-15 font-regular text-gray-600 mb-4" data-mock="true">
+                                    Руководители проектов, технические директора, предприниматели
+                                </p>
+                                <h4 class="text-16 font-semibold text-black mb-2">Формат работы:</h4>
+                                <p class="text-15 font-regular text-gray-600 mb-4" data-mock="true">
+                                    Онлайн встречи, детальные отчеты и рекомендации
+                                </p>
+                                <h4 class="text-16 font-semibold text-black mb-2">Стоимость:</h4>
+                                <p class="text-16 font-semibold text-black" data-mock="true">5 000 ₽/час</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- @END_MAP )) -->
+        </div>
+    </section>
+    <!-- @END_COMPONENT: ServicesSection -->
+
+    <!-- @COMPONENT: ContactSection [Contact form with Telegram integration] -->
+    <section id="contact" class="py-20 bg-gray-50">
+        <div class="container mx-auto px-6">
+            <h2 class="text-50 font-extrabold text-center text-black mb-16">Связаться со Мной</h2>
+            
+            <div class="max-w-2xl mx-auto">
+                <form class="space-y-6" data-implementation="Form submits to Telegram bot">
+                    <!-- @STATE: formData:object = {name: '', email: '', message: ''} -->
+                    <div>
+                        <label for="name" class="block text-16 font-semibold text-black mb-2">Имя</label>
+                        <input type="text" id="name" name="name" required
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-black transition-colors text-16 font-regular"
+                               placeholder="Ваше имя" data-bind="formData.name">
+                    </div>
+                    
+                    <div>
+                        <label for="email" class="block text-16 font-semibold text-black mb-2">Email</label>
+                        <input type="email" id="email" name="email" required
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-black transition-colors text-16 font-regular"
+                               placeholder="your@email.com" data-bind="formData.email">
+                    </div>
+                    
+                    <div>
+                        <label for="message" class="block text-16 font-semibold text-black mb-2">Сообщение</label>
+                        <textarea id="message" name="message" rows="6" required
+                                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-black transition-colors text-16 font-regular resize-none"
+                                  placeholder="Расскажите о вашем проекте..." data-bind="formData.message"></textarea>
+                    </div>
+                    
+                    <button type="submit" 
+                            class="w-full bg-black text-white py-4 text-16 font-semibold hover:bg-gray-800 transition-colors"
+                            data-event="click:handleSubmit" data-implementation="Send form data to Telegram">
+                        Отправить Сообщение
+                    </button>
+                </form>
+                
+                <div class="flex justify-center space-x-8 mt-12">
+                    <a href="#" class="flex items-center space-x-2 text-black hover:text-gray-600 transition-colors" 
+                       data-bind="contacts.telegram" data-implementation="Link to user's Telegram">
+                        <i class="fab fa-telegram text-24"></i>
+                        <span class="text-16 font-regular">Telegram</span>
+                    </a>
+                    <a href="#" class="flex items-center space-x-2 text-black hover:text-gray-600 transition-colors"
+                       data-bind="contacts.github" data-implementation="Link to user's GitHub">
+                        <i class="fab fa-github text-24"></i>
+                        <span class="text-16 font-regular">GitHub</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: ContactSection -->
+
+    <!-- @COMPONENT: Footer [Simple footer with copyright] -->
+    <footer class="bg-white border-t border-gray-200 py-8">
+        <div class="container mx-auto px-6 text-center">
+            <p class="text-15 font-regular text-gray-600" data-mock="true">
+                © 2024 <span data-bind="user.firstName">John</span> <span data-bind="user.lastName">Wayne</span>. Все права защищены.
+            </p>
+        </div>
+    </footer>
+    <!-- @END_COMPONENT: Footer -->
+
+    <!-- @COMPONENT: AdminAccessModal [Hidden admin panel access] -->
+    <div id="admin-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center" data-implementation="Admin access modal">
+        <div class="bg-white rounded-lg p-8 max-w-md w-full mx-4">
+            <h3 class="text-24 font-semibold text-black mb-4">Доступ к Админ-панели</h3>
+            <form data-implementation="Admin password verification">
+                <input type="password" placeholder="Пароль администратора" 
+                       class="w-full px-4 py-3 border border-gray-300 rounded-lg mb-4 text-16 font-regular"
+                       data-implementation="Check against ADMIN_PASSWORD env variable">
+                <div class="flex space-x-4">
+                    <button type="submit" class="flex-1 bg-black text-white py-3 text-16 font-semibold hover:bg-gray-800 transition-colors">
+                        Войти
+                    </button>
+                    <button type="button" class="flex-1 border border-gray-300 py-3 text-16 font-semibold hover:bg-gray-50 transition-colors"
+                            data-event="click:closeModal">
+                        Отмена
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- @END_COMPONENT: AdminAccessModal -->
+
+    <script>
+        (function() {
+            // TODO: Implement business logic, API calls, or state management
+            
+            // Service card toggle functionality
+            const serviceButtons = document.querySelectorAll('[data-event="click:toggleService"]');
+            serviceButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const content = this.parentElement.querySelector('[data-state="service-content"]');
+                    const icon = this.querySelector('i');
+                    
+                    if (content.classList.contains('hidden')) {
+                        content.classList.remove('hidden');
+                        icon.style.transform = 'rotate(180deg)';
+                    } else {
+                        content.classList.add('hidden');
+                        icon.style.transform = 'rotate(0deg)';
+                    }
+                });
+            });
+
+            // Smooth scrolling for navigation
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+
+            // Admin access trigger (Ctrl+Shift+A)
+            document.addEventListener('keydown', function(e) {
+                if (e.ctrlKey && e.shiftKey && e.key === 'A') {
+                    document.getElementById('admin-modal').classList.remove('hidden');
+                }
+            });
+
+            // Close modal functionality
+            document.querySelectorAll('[data-event="click:closeModal"]').forEach(button => {
+                button.addEventListener('click', function() {
+                    document.getElementById('admin-modal').classList.add('hidden');
+                });
+            });
+
+            // Form submission placeholder
+            document.querySelector('form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                // TODO: Implement Telegram bot message sending
+                alert('Сообщение отправлено! (Placeholder - нужна интеграция с Telegram Bot)');
+            });
+
+            // Mobile menu toggle
+            const mobileMenuButton = document.querySelector('.md\\:hidden button');
+            if (mobileMenuButton) {
+                mobileMenuButton.addEventListener('click', function() {
+                    // TODO: Implement mobile menu toggle
+                    console.log('Mobile menu toggle - implement navigation drawer');
+                });
+            }
+        })();
+    </script>
+</body>
+</html>

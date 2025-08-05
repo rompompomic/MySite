@@ -5,6 +5,7 @@ import {
   services,
   settings,
   contacts,
+  videos,
   type User,
   type InsertUser,
   type Profile,
@@ -17,6 +18,8 @@ import {
   type InsertSetting,
   type Contact,
   type InsertContact,
+  type Video,
+  type InsertVideo,
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc } from "drizzle-orm";
@@ -50,6 +53,12 @@ export interface IStorage {
   // Contacts
   getContacts(): Promise<Contact | undefined>;
   updateContacts(contacts: InsertContact): Promise<Contact>;
+
+  // Videos
+  getBackgroundVideo(): Promise<Video | undefined>;
+  createVideo(video: InsertVideo): Promise<Video>;
+  updateBackgroundVideo(videoId: string): Promise<void>;
+  deleteVideo(id: string): Promise<void>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -195,6 +204,32 @@ export class DatabaseStorage implements IStorage {
       const [created] = await db.insert(contacts).values(contactData).returning();
       return created;
     }
+  }
+
+  async getBackgroundVideo(): Promise<Video | undefined> {
+    try {
+      const [video] = await db.select().from(videos).where(eq(videos.isBackgroundVideo, true)).limit(1);
+      return video || undefined;
+    } catch (error) {
+      console.error("Error getting background video:", error);
+      return undefined;
+    }
+  }
+
+  async createVideo(video: InsertVideo): Promise<Video> {
+    const [created] = await db.insert(videos).values(video).returning();
+    return created;
+  }
+
+  async updateBackgroundVideo(videoId: string): Promise<void> {
+    // Сначала убираем флаг isBackgroundVideo у всех видео
+    await db.update(videos).set({ isBackgroundVideo: false });
+    // Затем устанавливаем флаг для выбранного видео
+    await db.update(videos).set({ isBackgroundVideo: true }).where(eq(videos.id, videoId));
+  }
+
+  async deleteVideo(id: string): Promise<void> {
+    await db.delete(videos).where(eq(videos.id, id));
   }
 }
 

@@ -1,10 +1,23 @@
 import { useQuery } from "@tanstack/react-query";
-import type { Setting } from "@shared/schema";
+import { useState } from "react";
 
 export default function VideoSection() {
-  const { data: videoSetting } = useQuery<Setting>({
-    queryKey: ["/api/settings/backgroundVideo"],
+  const [hasVideoError, setHasVideoError] = useState(false);
+
+  // Запрашиваем видео из базы данных
+  const { data: hasVideo, isLoading } = useQuery({
+    queryKey: ["/api/background-video"],
+    queryFn: async () => {
+      const response = await fetch("/api/background-video");
+      if (response.ok) {
+        return true;
+      }
+      return false;
+    },
+    retry: false,
   });
+
+  const videoSrc = hasVideo && !hasVideoError ? "/api/background-video" : null;
 
   return (
     <section className="min-h-screen relative overflow-hidden bg-black flex items-center justify-center">
@@ -20,7 +33,7 @@ export default function VideoSection() {
       />
 
       {/* Video overlay */}
-      {videoSetting?.value && videoSetting.value.trim() !== "" && (
+      {videoSrc && !isLoading && (
         <video
           className="absolute inset-0 w-full h-full object-cover"
           autoPlay
@@ -28,7 +41,6 @@ export default function VideoSection() {
           loop
           playsInline
           preload="metadata"
-          crossOrigin="anonymous"
           onLoadedData={(e) => {
             const video = e.target as HTMLVideoElement;
             console.log("Video loaded, duration:", video.duration);
@@ -40,14 +52,13 @@ export default function VideoSection() {
           onPause={() => console.log("Video paused")}
           onError={(e) => {
             console.log("Video error:", e);
-            const video = e.target as HTMLVideoElement;
-            video.style.display = "none"; // Hide failed video
+            setHasVideoError(true);
           }}
           onLoadStart={() => console.log("Video loading started")}
           onCanPlay={() => console.log("Video can play")}
         >
-          <source src={videoSetting.value} type="video/mp4" />
-          <source src={videoSetting.value} type="video/webm" />
+          <source src={videoSrc} type="video/mp4" />
+          <source src={videoSrc} type="video/webm" />
         </video>
       )}
 

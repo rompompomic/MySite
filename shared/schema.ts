@@ -43,6 +43,17 @@ export const settings = pgTable("settings", {
   value: text("value").notNull(),
 });
 
+export const videos = pgTable("videos", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  filename: text("filename").notNull(),
+  originalName: text("originalName").notNull(),
+  mimeType: text("mimeType").notNull(),
+  size: varchar("size").notNull(),
+  data: text("data").notNull(), // base64 encoded video data
+  isBackgroundVideo: boolean("isBackgroundVideo").default(false),
+  createdAt: timestamp("createdAt").defaultNow(),
+});
+
 export const contacts = pgTable("contacts", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   telegram: text("telegram"),
@@ -74,6 +85,11 @@ export const insertContactSchema = createInsertSchema(contacts).omit({
   id: true,
 });
 
+export const insertVideoSchema = createInsertSchema(videos).omit({
+  id: true,
+  createdAt: true,
+});
+
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
 export type Profile = typeof profile.$inferSelect;
@@ -86,3 +102,5 @@ export type Setting = typeof settings.$inferSelect;
 export type InsertSetting = z.infer<typeof insertSettingSchema>;
 export type Contact = typeof contacts.$inferSelect;
 export type InsertContact = z.infer<typeof insertContactSchema>;
+export type Video = typeof videos.$inferSelect;
+export type InsertVideo = z.infer<typeof insertVideoSchema>;

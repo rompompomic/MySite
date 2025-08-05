@@ -2,11 +2,13 @@ import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 
-const app = express();
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+export async function createServer() {
+  const app = express();
+  // Консервативные лимиты для serverless functions
+  app.use(express.json({ limit: '25mb' }));
+  app.use(express.urlencoded({ extended: false, limit: '25mb' }));
 
-app.use((req, res, next) => {
+  app.use((req, res, next) => {
   const start = Date.now();
   const path = req.path;
   let capturedJsonResponse: Record<string, any> | undefined = undefined;
@@ -33,10 +35,9 @@ app.use((req, res, next) => {
     }
   });
 
-  next();
-});
+    next();
+  });
 
-(async () => {
   const server = await registerRoutes(app);
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
@@ -56,16 +57,17 @@ app.use((req, res, next) => {
     serveStatic(app);
   }
 
-  // ALWAYS serve the app on the port specified in the environment variable PORT
-  // Other ports are firewalled. Default to 5000 if not specified.
-  // this serves both the API and the client.
-  // It is the only port that is not firewalled.
-  const port = parseInt(process.env.PORT || '5000', 10);
-  server.listen({
-    port,
-    host: "0.0.0.0",
-    reusePort: true,
-  }, () => {
-    log(`serving on port ${port}`);
-  });
-})();
+  return app;
+}
+
+// For local development
+if (process.env.NODE_ENV !== 'production') {
+  (async () => {
+    const app = await createServer();
+    const port = parseInt(process.env.PORT || '5000', 10);
+    
+    app.listen(port, "0.0.0.0", () => {
+      log(`serving on port ${port}`);
+    });
+  })();
+}

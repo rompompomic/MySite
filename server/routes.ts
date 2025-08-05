@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertProfileSchema, insertPortfolioItemSchema, insertServiceSchema, insertSettingSchema, insertContactSchema, insertVideoSchema } from "@shared/schema";
+import { insertProfileSchema, insertPortfolioItemSchema, insertServiceSchema, insertSettingSchema, insertContactSchema } from "@shared/schema";
 import { z } from "zod";
 
 const adminPasswordSchema = z.object({
@@ -249,37 +249,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
         res.status(400).json({ message: "Неверные данные настройки" });
       } else {
         res.status(500).json({ message: "Ошибка обновления настройки" });
-      }
-    }
-  });
-
-  // Video endpoints
-  app.get("/api/background-video", async (req, res) => {
-    try {
-      const video = await storage.getBackgroundVideo();
-      if (video) {
-        res.set('Content-Type', video.mimeType);
-        const buffer = Buffer.from(video.data, 'base64');
-        res.send(buffer);
-      } else {
-        res.status(404).json({ message: "Видео не найдено" });
-      }
-    } catch (error) {
-      res.status(500).json({ message: "Ошибка получения видео" });
-    }
-  });
-
-  app.post("/api/admin/upload-video", requireAuth, async (req, res) => {
-    try {
-      const data = insertVideoSchema.parse(req.body);
-      const video = await storage.createVideo(data);
-      await storage.updateBackgroundVideo(video.id);
-      res.json({ message: "Видео загружено", video });
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        res.status(400).json({ message: "Неверные данные видео" });
-      } else {
-        res.status(500).json({ message: "Ошибка загрузки видео" });
       }
     }
   });

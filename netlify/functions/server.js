@@ -38,3 +38,4 @@ export const handler = async (event, context) => {
   const serverlessHandler = await createHandler();
   return serverlessHandler(event, context);
 };
+

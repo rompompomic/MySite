@@ -27,6 +27,15 @@ export default function VideoSection() {
           muted 
           loop 
           playsInline
+          preload="auto"
+          onLoadedMetadata={(e) => {
+            const video = e.target as HTMLVideoElement;
+            console.log("Video loaded, duration:", video.duration);
+            video.play().catch(console.log);
+          }}
+          onPlay={() => console.log("Video started playing")}
+          onPause={() => console.log("Video paused")}
+          onError={(e) => console.log("Video error:", e)}
         >
           <source src={videoSetting.value} type="video/mp4" />
         </video>

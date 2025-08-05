@@ -112,7 +112,7 @@ export default function ContactSection() {
             <Button
               type="submit"
               disabled={contactMutation.isPending}
-              className="w-full bg-black text-white py-4 text-16 font-semibold hover:bg-gray-800 transition-colors"
+              className="w-full bg-black py-4 font-semibold hover:bg-gray-800 transition-colors text-[#f9fafb]"
             >
               {contactMutation.isPending ? "Отправляем..." : "Отправить Сообщение"}
             </Button>

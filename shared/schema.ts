@@ -49,6 +49,17 @@ export const contacts = pgTable("contacts", {
   github: text("github"),
 });
 
+export const videoFiles = pgTable("video_files", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  fileName: text("filename").notNull(),
+  originalName: text("originalname").notNull(),
+  mimeType: text("mimetype").notNull(),
+  fileSize: varchar("filesize").notNull(),
+  filePath: text("filepath").notNull(),
+  isActive: boolean("isactive").default(false),
+  createdAt: timestamp("createdat").defaultNow(),
+});
+
 export const insertUserSchema = createInsertSchema(users).pick({
   username: true,
   password: true,
@@ -74,6 +85,11 @@ export const insertContactSchema = createInsertSchema(contacts).omit({
   id: true,
 });
 
+export const insertVideoFileSchema = createInsertSchema(videoFiles).omit({
+  id: true,
+  createdAt: true,
+});
+
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
 export type Profile = typeof profile.$inferSelect;
@@ -86,3 +102,5 @@ export type Setting = typeof settings.$inferSelect;
 export type InsertSetting = z.infer<typeof insertSettingSchema>;
 export type Contact = typeof contacts.$inferSelect;
 export type InsertContact = z.infer<typeof insertContactSchema>;
+export type VideoFile = typeof videoFiles.$inferSelect;
+export type InsertVideoFile = z.infer<typeof insertVideoFileSchema>;

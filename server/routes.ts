@@ -63,7 +63,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/profile", async (req, res) => {
     try {
       const profile = await storage.getProfile();
-      res.json(profile || { firstName: "John", lastName: "Wayne", description: "Профессиональный веб-разработчик и дизайнер" });
+      if (!profile) {
+        return res.status(404).json({ message: "Профиль не найден" });
+      }
+      res.json(profile);
     } catch (error) {
       res.status(500).json({ message: "Ошибка получения профиля" });
     }
@@ -90,7 +93,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/contacts", async (req, res) => {
     try {
       const contactData = await storage.getContacts();
-      res.json(contactData || { telegram: "", github: "" });
+      if (!contactData) {
+        return res.status(404).json({ message: "Контакты не найдены" });
+      }
+      res.json(contactData);
     } catch (error) {
       res.status(500).json({ message: "Ошибка получения контактов" });
     }

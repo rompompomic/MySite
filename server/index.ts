@@ -3,9 +3,9 @@ import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 
 const app = express();
-// Более консервативные лимиты для Netlify
-app.use(express.json({ limit: '50mb' }));
-app.use(express.urlencoded({ extended: false, limit: '50mb' }));
+// Консервативные лимиты для Netlify Functions
+app.use(express.json({ limit: '25mb' }));
+app.use(express.urlencoded({ extended: false, limit: '25mb' }));
 
 app.use((req, res, next) => {
   const start = Date.now();

@@ -275,24 +275,47 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post("/api/admin/upload-video", requireAuth, async (req, res) => {
     try {
-      console.log("Upload request received, body size:", JSON.stringify(req.body).length);
+      console.log("Upload request received");
+      
+      if (!req.body || !req.body.data) {
+        return res.status(400).json({ message: "Отсутствуют данные видео" });
+      }
+
+      const bodySize = JSON.stringify(req.body).length;
+      console.log("Request body size:", bodySize, "bytes");
+      
+      // Проверяем размер до валидации
+      if (bodySize > 20 * 1024 * 1024) { // 20MB в JSON
+        return res.status(413).json({ message: "Размер данных превышает лимит Netlify" });
+      }
       
       const data = insertVideoSchema.parse(req.body);
-      console.log("Schema validation passed");
+      console.log("Schema validation passed, filename:", data.filename);
       
       const video = await storage.createVideo(data);
-      console.log("Video created in storage");
+      console.log("Video created in storage with ID:", video.id);
       
       await storage.updateBackgroundVideo(video.id);
       console.log("Background video updated");
       
-      res.json({ message: "Видео загружено", video: { id: video.id, filename: video.filename } });
+      res.json({ 
+        message: "Видео успешно загружено", 
+        video: { 
+          id: video.id, 
+          filename: video.filename,
+          size: data.size 
+        } 
+      });
     } catch (error) {
       console.error("Video upload error:", error);
       if (error instanceof z.ZodError) {
         res.status(400).json({ message: "Неверные данные видео", errors: error.errors });
       } else {
-        res.status(500).json({ message: "Ошибка загрузки видео", error: error.message });
+        res.status(500).json({ 
+          message: "Ошибка сервера при загрузке видео", 
+          error: error instanceof Error ? error.message : String(error),
+          stack: process.env.NODE_ENV === 'development' && error instanceof Error ? error.stack : undefined 
+        });
       }
     }
   });

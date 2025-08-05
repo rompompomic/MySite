@@ -69,8 +69,13 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getProfile(): Promise<Profile | undefined> {
-    const [profileData] = await db.select().from(profile).limit(1);
-    return profileData || undefined;
+    try {
+      const [profileData] = await db.select().from(profile).limit(1);
+      return profileData || undefined;
+    } catch (error) {
+      console.error("Error getting profile:", error);
+      return undefined;
+    }
   }
 
   async updateProfile(profileData: InsertProfile): Promise<Profile> {
@@ -78,7 +83,7 @@ export class DatabaseStorage implements IStorage {
     if (existing) {
       const [updated] = await db
         .update(profile)
-        .set({ ...profileData, updatedAt: new Date() })
+        .set(profileData)
         .where(eq(profile.id, existing.id))
         .returning();
       return updated;

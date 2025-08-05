@@ -5,6 +5,7 @@ import {
   services,
   settings,
   contacts,
+  videoFiles,
   type User,
   type InsertUser,
   type Profile,
@@ -17,6 +18,8 @@ import {
   type InsertSetting,
   type Contact,
   type InsertContact,
+  type VideoFile,
+  type InsertVideoFile,
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc } from "drizzle-orm";
@@ -50,6 +53,14 @@ export interface IStorage {
   // Contacts
   getContacts(): Promise<Contact | undefined>;
   updateContacts(contacts: InsertContact): Promise<Contact>;
+
+  // Video Files
+  getVideoFiles(): Promise<VideoFile[]>;
+  getVideoFileById(id: string): Promise<VideoFile | undefined>;
+  getActiveVideoFile(): Promise<VideoFile | undefined>;
+  createVideoFile(video: InsertVideoFile): Promise<VideoFile>;
+  setActiveVideo(id: string): Promise<void>;
+  deleteVideoFile(id: string): Promise<void>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -195,6 +206,51 @@ export class DatabaseStorage implements IStorage {
       const [created] = await db.insert(contacts).values(contactData).returning();
       return created;
     }
+  }
+
+  async getVideoFiles(): Promise<VideoFile[]> {
+    try {
+      return await db.select().from(videoFiles).orderBy(desc(videoFiles.createdAt));
+    } catch (error) {
+      console.error("Error getting video files:", error);
+      return [];
+    }
+  }
+
+  async getVideoFileById(id: string): Promise<VideoFile | undefined> {
+    try {
+      const [video] = await db.select().from(videoFiles).where(eq(videoFiles.id, id));
+      return video || undefined;
+    } catch (error) {
+      console.error("Error getting video file by id:", error);
+      return undefined;
+    }
+  }
+
+  async getActiveVideoFile(): Promise<VideoFile | undefined> {
+    try {
+      const [video] = await db.select().from(videoFiles).where(eq(videoFiles.isActive, true));
+      return video || undefined;
+    } catch (error) {
+      console.error("Error getting active video file:", error);
+      return undefined;
+    }
+  }
+
+  async createVideoFile(video: InsertVideoFile): Promise<VideoFile> {
+    const [created] = await db.insert(videoFiles).values(video).returning();
+    return created;
+  }
+
+  async setActiveVideo(id: string): Promise<void> {
+    // Деактивируем все видео
+    await db.update(videoFiles).set({ isActive: false });
+    // Активируем выбранное видео
+    await db.update(videoFiles).set({ isActive: true }).where(eq(videoFiles.id, id));
+  }
+
+  async deleteVideoFile(id: string): Promise<void> {
+    await db.delete(videoFiles).where(eq(videoFiles.id, id));
   }
 }
 

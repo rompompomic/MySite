@@ -76,10 +76,10 @@ export default function VideoManager() {
         return;
       }
       
-      if (file.size > 50 * 1024 * 1024) { // 50MB limit
+      if (file.size > 25 * 1024 * 1024) { // 25MB limit
         toast({
           title: "Ошибка",
-          description: "Размер файла не должен превышать 50MB",
+          description: "Размер файла не должен превышать 25MB",
           variant: "destructive",
         });
         return;
@@ -137,7 +137,7 @@ export default function VideoManager() {
               </Button>
             </div>
             <p className="text-sm text-gray-500 mt-1">
-              Поддерживаемые форматы: MP4, WebM, MOV. Максимальный размер: 50MB
+              Поддерживаемые форматы: MP4, WebM, MOV. Максимальный размер: 25MB
             </p>
           </div>
 

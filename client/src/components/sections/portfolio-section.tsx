@@ -29,11 +29,13 @@ export default function PortfolioSection() {
           {portfolioItems.map((item) => {
             const content = (
               <>
-                <img 
-                  src={item.imageUrl} 
-                  alt={item.title}
-                  className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
-                />
+                <div className="w-full h-48 flex items-center justify-center bg-gray-100 overflow-hidden">
+                  <img 
+                    src={item.imageUrl} 
+                    alt={item.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                </div>
                 <div className="p-6">
                   <h3 className="text-24 font-semibold text-black mb-2">{item.title}</h3>
                   <p className="text-16 font-regular text-gray-600">{item.description}</p>

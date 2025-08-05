@@ -20,7 +20,7 @@ export const portfolioItems = pgTable("portfolio_items", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   title: text("title").notNull(),
   description: text("description").notNull(),
-  imageUrl: text("image").notNull(),
+  imageUrl: text("imageUrl").notNull(),
   order: varchar("order").notNull(),
   createdAt: timestamp("createdAt").defaultNow(),
 });
@@ -54,7 +54,6 @@ export const insertUserSchema = createInsertSchema(users).pick({
 
 export const insertProfileSchema = createInsertSchema(profile).omit({
   id: true,
-  updatedAt: true,
 });
 
 export const insertPortfolioItemSchema = createInsertSchema(portfolioItems).omit({
@@ -67,14 +66,10 @@ export const insertServiceSchema = createInsertSchema(services).omit({
   createdAt: true,
 });
 
-export const insertSettingSchema = createInsertSchema(settings).omit({
-  id: true,
-  updatedAt: true,
-});
+export const insertSettingSchema = createInsertSchema(settings);
 
 export const insertContactSchema = createInsertSchema(contacts).omit({
   id: true,
-  updatedAt: true,
 });
 
 export type InsertUser = z.infer<typeof insertUserSchema>;

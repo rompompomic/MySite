@@ -94,7 +94,12 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getPortfolioItems(): Promise<PortfolioItem[]> {
-    return await db.select().from(portfolioItems).orderBy(portfolioItems.order, portfolioItems.createdAt);
+    try {
+      return await db.select().from(portfolioItems).orderBy(portfolioItems.order, portfolioItems.createdAt);
+    } catch (error) {
+      console.error("Error getting portfolio items:", error);
+      return [];
+    }
   }
 
   async createPortfolioItem(item: InsertPortfolioItem): Promise<PortfolioItem> {
@@ -116,7 +121,12 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getServices(): Promise<Service[]> {
-    return await db.select().from(services).orderBy(services.order, services.createdAt);
+    try {
+      return await db.select().from(services).orderBy(services.order, services.createdAt);
+    } catch (error) {
+      console.error("Error getting services:", error);
+      return [];
+    }
   }
 
   async createService(service: InsertService): Promise<Service> {
@@ -138,8 +148,13 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getSetting(key: string): Promise<Setting | undefined> {
-    const [setting] = await db.select().from(settings).where(eq(settings.key, key));
-    return setting || undefined;
+    try {
+      const [setting] = await db.select().from(settings).where(eq(settings.key, key));
+      return setting || undefined;
+    } catch (error) {
+      console.error("Error getting setting:", error);
+      return undefined;
+    }
   }
 
   async updateSetting(setting: InsertSetting): Promise<Setting> {
@@ -147,7 +162,7 @@ export class DatabaseStorage implements IStorage {
     if (existing) {
       const [updated] = await db
         .update(settings)
-        .set({ value: setting.value, updatedAt: new Date() })
+        .set({ value: setting.value })
         .where(eq(settings.key, setting.key))
         .returning();
       return updated;
@@ -158,8 +173,13 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getContacts(): Promise<Contact | undefined> {
-    const [contactData] = await db.select().from(contacts).limit(1);
-    return contactData || undefined;
+    try {
+      const [contactData] = await db.select().from(contacts).limit(1);
+      return contactData || undefined;
+    } catch (error) {
+      console.error("Error getting contacts:", error);
+      return undefined;
+    }
   }
 
   async updateContacts(contactData: InsertContact): Promise<Contact> {
@@ -167,7 +187,7 @@ export class DatabaseStorage implements IStorage {
     if (existing) {
       const [updated] = await db
         .update(contacts)
-        .set({ ...contactData, updatedAt: new Date() })
+        .set(contactData)
         .where(eq(contacts.id, existing.id))
         .returning();
       return updated;

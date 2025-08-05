@@ -44,7 +44,8 @@ const storage = {
     return {
       id: "default-video",
       fileName: "background-video.mp4",
-      filePath: process.env.BACKGROUND_VIDEO_URL || "",
+      filePath: process.env.BACKGROUND_VIDEO_URL || "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+      mimeType: "video/mp4",
       isActive: true
     };
   }
@@ -162,6 +163,15 @@ const createHandler = async () => {
     }
   });
 
+  app.get("/api/videos", async (req, res) => {
+    try {
+      const videos = [await storage.getActiveVideoFile()];
+      res.json(videos);
+    } catch (error) {
+      res.status(500).json({ message: "Ошибка получения видео файлов" });
+    }
+  });
+
   app.get("/api/videos/active", async (req, res) => {
     try {
       const activeVideo = await storage.getActiveVideoFile();
@@ -201,6 +211,56 @@ const createHandler = async () => {
     } catch (error) {
       res.status(400).json({ message: "Неверные данные" });
     }
+  });
+
+  // Admin video management (simplified for Netlify)
+  app.post("/api/admin/videos/upload", requireAuth, async (req, res) => {
+    res.status(501).json({ message: "Загрузка видео не поддерживается в Netlify версии. Используйте прямую ссылку на видео в переменной BACKGROUND_VIDEO_URL." });
+  });
+
+  app.put("/api/admin/videos/:id/activate", requireAuth, async (req, res) => {
+    res.status(501).json({ message: "Активация видео не поддерживается в Netlify версии. Используйте переменную BACKGROUND_VIDEO_URL." });
+  });
+
+  app.delete("/api/admin/videos/:id", requireAuth, async (req, res) => {
+    res.status(501).json({ message: "Удаление видео не поддерживается в Netlify версии." });
+  });
+
+  // Admin endpoints for other content (simplified)
+  app.put("/api/admin/profile", requireAuth, async (req, res) => {
+    res.status(501).json({ message: "Редактирование профиля не поддерживается в Netlify версии. Используйте переменные окружения." });
+  });
+
+  app.post("/api/admin/portfolio", requireAuth, async (req, res) => {
+    res.status(501).json({ message: "Редактирование портфолио не поддерживается в Netlify версии. Используйте переменную PORTFOLIO_ITEMS." });
+  });
+
+  app.put("/api/admin/portfolio/:id", requireAuth, async (req, res) => {
+    res.status(501).json({ message: "Редактирование портфолио не поддерживается в Netlify версии. Используйте переменную PORTFOLIO_ITEMS." });
+  });
+
+  app.delete("/api/admin/portfolio/:id", requireAuth, async (req, res) => {
+    res.status(501).json({ message: "Редактирование портфолио не поддерживается в Netlify версии. Используйте переменную PORTFOLIO_ITEMS." });
+  });
+
+  app.post("/api/admin/services", requireAuth, async (req, res) => {
+    res.status(501).json({ message: "Редактирование услуг не поддерживается в Netlify версии. Используйте переменную SERVICES_LIST." });
+  });
+
+  app.put("/api/admin/services/:id", requireAuth, async (req, res) => {
+    res.status(501).json({ message: "Редактирование услуг не поддерживается в Netlify версии. Используйте переменную SERVICES_LIST." });
+  });
+
+  app.delete("/api/admin/services/:id", requireAuth, async (req, res) => {
+    res.status(501).json({ message: "Редактирование услуг не поддерживается в Netlify версии. Используйте переменную SERVICES_LIST." });
+  });
+
+  app.put("/api/admin/contacts", requireAuth, async (req, res) => {
+    res.status(501).json({ message: "Редактирование контактов не поддерживается в Netlify версии. Используйте переменные TELEGRAM_CONTACT и GITHUB_CONTACT." });
+  });
+
+  app.put("/api/admin/settings/:key", requireAuth, async (req, res) => {
+    res.status(501).json({ message: "Редактирование настроек не поддерживается в Netlify версии. Используйте переменные окружения." });
   });
 
   cachedHandler = serverlessHttp(app);

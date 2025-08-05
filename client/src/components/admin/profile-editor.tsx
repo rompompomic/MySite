@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -24,7 +24,7 @@ export default function ProfileEditor() {
   });
 
   // Update form when profile loads
-  useState(() => {
+  useEffect(() => {
     if (profile) {
       setFormData({
         firstName: profile.firstName,
@@ -32,7 +32,7 @@ export default function ProfileEditor() {
         description: profile.description,
       });
     }
-  });
+  }, [profile]);
 
   const updateMutation = useMutation({
     mutationFn: async (data: typeof formData) => {

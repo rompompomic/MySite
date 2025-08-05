@@ -9,38 +9,48 @@ export default function VideoSection() {
   return (
     <section className="min-h-screen relative overflow-hidden bg-black flex items-center justify-center">
       {/* Background texture for when video is not loaded */}
-      <div 
+      <div
         className="absolute inset-0 opacity-30"
         style={{
-          backgroundImage: `url('https://images.unsplash.com/photo-1557804506-669a67965ba0?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1920&h=1080')`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          filter: 'invert(1) contrast(2)'
+          backgroundImage: `url('null')`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          filter: "invert(1) contrast(2)",
         }}
       />
-      
+
       {/* Video overlay */}
-      {videoSetting?.value && (
-        <video 
-          className="absolute inset-0 w-full h-full object-cover" 
-          autoPlay 
-          muted 
-          loop 
+      {videoSetting?.value && videoSetting.value.trim() !== "" && (
+        <video
+          className="absolute inset-0 w-full h-full object-cover"
+          autoPlay
+          muted
+          loop
           playsInline
-          preload="auto"
-          onLoadedMetadata={(e) => {
+          preload="metadata"
+          crossOrigin="anonymous"
+          onLoadedData={(e) => {
             const video = e.target as HTMLVideoElement;
             console.log("Video loaded, duration:", video.duration);
-            video.play().catch(console.log);
+            video.play().catch((error) => {
+              console.log("Video play failed:", error);
+            });
           }}
           onPlay={() => console.log("Video started playing")}
           onPause={() => console.log("Video paused")}
-          onError={(e) => console.log("Video error:", e)}
+          onError={(e) => {
+            console.log("Video error:", e);
+            const video = e.target as HTMLVideoElement;
+            video.style.display = "none"; // Hide failed video
+          }}
+          onLoadStart={() => console.log("Video loading started")}
+          onCanPlay={() => console.log("Video can play")}
         >
           <source src={videoSetting.value} type="video/mp4" />
+          <source src={videoSetting.value} type="video/webm" />
         </video>
       )}
-      
+
       <div className="relative z-10 text-center text-white">
         <h2 className="text-50 font-extrabold mb-4">В Процессе Работы</h2>
         <p className="text-24 font-regular">Создание. Инновации. Результат.</p>

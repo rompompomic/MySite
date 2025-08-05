@@ -1,10 +1,8 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertProfileSchema, insertPortfolioItemSchema, insertServiceSchema, insertSettingSchema, insertContactSchema, insertVideoFileSchema } from "@shared/schema";
+import { insertProfileSchema, insertPortfolioItemSchema, insertServiceSchema, insertSettingSchema, insertContactSchema } from "@shared/schema";
 import { z } from "zod";
-import { videoUpload, deleteVideoFile } from "./upload";
-import path from "path";
 
 const adminPasswordSchema = z.object({
   password: z.string(),
@@ -253,76 +251,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
         res.status(500).json({ message: "Ошибка обновления настройки" });
       }
     }
-  });
-
-  // Video file routes
-  app.get("/api/videos", async (req, res) => {
-    try {
-      const videos = await storage.getVideoFiles();
-      res.json(videos);
-    } catch (error) {
-      res.status(500).json({ message: "Ошибка получения видео файлов" });
-    }
-  });
-
-  app.get("/api/videos/active", async (req, res) => {
-    try {
-      const activeVideo = await storage.getActiveVideoFile();
-      res.json(activeVideo);
-    } catch (error) {
-      res.status(500).json({ message: "Ошибка получения активного видео" });
-    }
-  });
-
-  app.post("/api/admin/videos/upload", requireAuth, videoUpload.single('video'), async (req, res) => {
-    try {
-      if (!req.file) {
-        return res.status(400).json({ message: "Файл не был загружен" });
-      }
-
-      const videoData = {
-        fileName: req.file.filename,
-        originalName: req.file.originalname,
-        mimeType: req.file.mimetype,
-        fileSize: req.file.size.toString(),
-        filePath: req.file.path,
-        isActive: false,
-      };
-
-      const video = await storage.createVideoFile(videoData);
-      res.json(video);
-    } catch (error) {
-      res.status(500).json({ message: "Ошибка загрузки видео файла" });
-    }
-  });
-
-  app.put("/api/admin/videos/:id/activate", requireAuth, async (req, res) => {
-    try {
-      await storage.setActiveVideo(req.params.id);
-      res.json({ message: "Видео активировано" });
-    } catch (error) {
-      res.status(500).json({ message: "Ошибка активации видео" });
-    }
-  });
-
-  app.delete("/api/admin/videos/:id", requireAuth, async (req, res) => {
-    try {
-      const video = await storage.getVideoFileById(req.params.id);
-      if (video) {
-        deleteVideoFile(video.filePath);
-        await storage.deleteVideoFile(req.params.id);
-      }
-      res.json({ message: "Видео файл удален" });
-    } catch (error) {
-      res.status(500).json({ message: "Ошибка удаления видео файла" });
-    }
-  });
-
-  // Serve video files
-  app.get("/uploads/videos/:filename", (req, res) => {
-    const filename = req.params.filename;
-    const filePath = path.join(process.cwd(), 'uploads', 'videos', filename);
-    res.sendFile(filePath);
   });
 
   const httpServer = createServer(app);

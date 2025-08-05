@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
-import type { VideoFile } from "@shared/schema";
+import type { Setting } from "@shared/schema";
 
 export default function VideoSection() {
-  const { data: activeVideo } = useQuery<VideoFile>({
-    queryKey: ["/api/videos/active"],
+  const { data: videoSetting } = useQuery<Setting>({
+    queryKey: ["/api/settings/backgroundVideo"],
   });
 
   return (
@@ -20,7 +20,7 @@ export default function VideoSection() {
       />
 
       {/* Video overlay */}
-      {activeVideo && (
+      {videoSetting?.value && videoSetting.value.trim() !== "" && (
         <video
           className="absolute inset-0 w-full h-full object-cover"
           autoPlay
@@ -28,6 +28,7 @@ export default function VideoSection() {
           loop
           playsInline
           preload="metadata"
+          crossOrigin="anonymous"
           onLoadedData={(e) => {
             const video = e.target as HTMLVideoElement;
             console.log("Video loaded, duration:", video.duration);
@@ -45,7 +46,8 @@ export default function VideoSection() {
           onLoadStart={() => console.log("Video loading started")}
           onCanPlay={() => console.log("Video can play")}
         >
-          <source src={`/uploads/videos/${activeVideo.fileName}`} type={activeVideo.mimeType} />
+          <source src={videoSetting.value} type="video/mp4" />
+          <source src={videoSetting.value} type="video/webm" />
         </video>
       )}
 

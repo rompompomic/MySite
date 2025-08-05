@@ -22,6 +22,8 @@ export const portfolioItems = pgTable("portfolio_items", {
   description: text("description").notNull(),
   imageUrl: text("imageUrl").notNull(),
   order: varchar("order").notNull(),
+  hasLink: boolean("hasLink").default(false),
+  linkUrl: text("linkUrl"),
   createdAt: timestamp("createdAt").defaultNow(),
 });
 

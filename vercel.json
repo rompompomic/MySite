@@ -7,13 +7,15 @@
       "config": {
         "distDir": "dist/public"
       }
+    },
+    {
+      "src": "api/server.js",
+      "use": "@vercel/node",
+      "config": {
+        "maxDuration": 30
+      }
     }
   ],
-  "functions": {
-    "api/server.js": {
-      "maxDuration": 30
-    }
-  },
   "routes": [
     {
       "src": "/api/(.*)",

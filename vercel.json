@@ -1,32 +1,20 @@
 {
   "version": 2,
-  "builds": [
+  "buildCommand": "npm run build:client",
+  "outputDirectory": "dist/public",
+  "functions": {
+    "api/server.js": {
+      "maxDuration": 30
+    }
+  },
+  "rewrites": [
     {
-      "src": "package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "dist/public"
-      }
+      "source": "/api/(.*)",
+      "destination": "/api/server.js"
     },
     {
-      "src": "api/server.js",
-      "use": "@vercel/node",
-      "config": {
-        "maxDuration": 30
-      }
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
-  ],
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "/api/server.js"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/index.html"
-    }
-  ],
-  "env": {
-    "NODE_ENV": "production"
-  }
+  ]
 }

@@ -17,4 +17,3 @@
 
 [functions]
   node_bundler = "esbuild"
-  package = "server"

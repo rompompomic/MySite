@@ -11,10 +11,9 @@ export const users = pgTable("users", {
 
 export const profile = pgTable("profile", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  firstName: text("first_name").notNull(),
-  lastName: text("last_name").notNull(),
+  firstName: text("firstName").notNull(),
+  lastName: text("lastName").notNull(),
   description: text("description").notNull(),
-  updatedAt: timestamp("updated_at").defaultNow(),
 });
 
 export const portfolioItems = pgTable("portfolio_items", {

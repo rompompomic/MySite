@@ -72,14 +72,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/portfolio", async (req, res) => {
-    try {
-      const items = await storage.getPortfolioItems();
-      res.json(items);
-    } catch (error) {
-      res.status(500).json({ message: "Ошибка получения портфолио" });
-    }
-  });
+    app.get("/api/portfolio", async (req, res) => {
+      try {
+        const items = await storage.getPortfolioItems();
+        res.json(items);
+      } catch (error) {
+        res.status(500).json({ message: "Ошибка получения портфолио" });
+      }
+    });
 
   app.get("/api/services", async (req, res) => {
     try {
@@ -157,42 +157,42 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/admin/portfolio", requireAuth, async (req, res) => {
-    try {
-      const data = insertPortfolioItemSchema.parse(req.body);
-      const item = await storage.createPortfolioItem(data);
-      res.json(item);
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        res.status(400).json({ message: "Неверные данные портфолио" });
-      } else {
-        res.status(500).json({ message: "Ошибка создания элемента портфолио" });
+    app.post("/api/admin/portfolio", requireAuth, async (req, res) => {
+      try {
+        const data = insertPortfolioItemSchema.parse(req.body);
+        const item = await storage.createPortfolioItem(data);
+        res.json(item);
+      } catch (error) {
+        if (error instanceof z.ZodError) {
+          res.status(400).json({ message: "Неверные данные портфолио" });
+        } else {
+          res.status(500).json({ message: "Ошибка создания элемента портфолио" });
+        }
       }
-    }
-  });
+    });
 
-  app.put("/api/admin/portfolio/:id", requireAuth, async (req, res) => {
-    try {
-      const data = insertPortfolioItemSchema.partial().parse(req.body);
-      const item = await storage.updatePortfolioItem(req.params.id, data);
-      res.json(item);
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        res.status(400).json({ message: "Неверные данные портфолио" });
-      } else {
-        res.status(500).json({ message: "Ошибка обновления элемента портфолио" });
+    app.put("/api/admin/portfolio/:id", requireAuth, async (req, res) => {
+      try {
+        const data = insertPortfolioItemSchema.partial().parse(req.body);
+        const item = await storage.updatePortfolioItem(req.params.id, data);
+        res.json(item);
+      } catch (error) {
+        if (error instanceof z.ZodError) {
+          res.status(400).json({ message: "Неверные данные портфолио" });
+        } else {
+          res.status(500).json({ message: "Ошибка обновления элемента портфолио" });
+        }
       }
-    }
-  });
+    });
 
-  app.delete("/api/admin/portfolio/:id", requireAuth, async (req, res) => {
-    try {
-      await storage.deletePortfolioItem(req.params.id);
-      res.json({ message: "Элемент удален" });
-    } catch (error) {
-      res.status(500).json({ message: "Ошибка удаления элемента портфолио" });
-    }
-  });
+    app.delete("/api/admin/portfolio/:id", requireAuth, async (req, res) => {
+      try {
+        await storage.deletePortfolioItem(req.params.id);
+        res.json({ message: "Элемент удален" });
+      } catch (error) {
+        res.status(500).json({ message: "Ошибка удаления элемента портфолио" });
+      }
+    });
 
   app.post("/api/admin/services", requireAuth, async (req, res) => {
     try {

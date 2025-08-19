@@ -81,7 +81,7 @@ export default function PortfolioSection() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
           >
-            <p className="text-24">Портфолио пока пусто</p>
+            <p className="text-24">Кейсы пока пусты</p>
             <p className="text-16 mt-2">Добавьте работы через админ-панель</p>
           </motion.div>
         </div>
@@ -90,7 +90,7 @@ export default function PortfolioSection() {
   }
 
   return (
-    <section id="portfolio" className="py-20 bg-gray-50">
+  <section id="portfolio" className="py-20 bg-gray-50">
       <div className="container mx-auto px-6">
         <motion.h2 
           className="text-50 font-extrabold text-center text-black mb-16"

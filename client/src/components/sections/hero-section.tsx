@@ -49,7 +49,7 @@ export default function HeroSection() {
   };
 
   const scrollToPortfolio = () => {
-    const element = document.getElementById("portfolio");
+  const element = document.getElementById("portfolio");
     if (element) {
       element.scrollIntoView({ behavior: "smooth" });
     }

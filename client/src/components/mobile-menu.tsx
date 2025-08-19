@@ -31,7 +31,7 @@ export default function MobileMenu({ isOpen, onClose, onNavigate }: MobileMenuPr
               onClick={() => onNavigate("portfolio")}
               className="block w-full text-left text-16 font-regular hover:text-gray-600 transition-colors py-2"
             >
-              Портфолио
+              Кейсы
             </button>
             <button
               onClick={() => onNavigate("services")}

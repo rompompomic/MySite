@@ -32,10 +32,10 @@ export default function PortfolioManager() {
 
   const createMutation = useMutation({
     mutationFn: async (data: typeof formData) => {
-      return await apiRequest("POST", "/api/admin/portfolio", data);
+  return await apiRequest("POST", "/api/admin/portfolio", data);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/portfolio"] });
+  queryClient.invalidateQueries({ queryKey: ["/api/portfolio"] });
       setIsAdding(false);
       setFormData({ title: "", description: "", imageUrl: "", order: "0", hasLink: false, linkUrl: "" });
       toast({
@@ -54,10 +54,10 @@ export default function PortfolioManager() {
 
   const updateMutation = useMutation({
     mutationFn: async ({ id, data }: { id: string; data: typeof formData }) => {
-      return await apiRequest("PUT", `/api/admin/portfolio/${id}`, data);
+  return await apiRequest("PUT", `/api/admin/portfolio/${id}`, data);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/portfolio"] });
+  queryClient.invalidateQueries({ queryKey: ["/api/portfolio"] });
       setEditingId(null);
       setFormData({ title: "", description: "", imageUrl: "", order: "0", hasLink: false, linkUrl: "" });
       toast({
@@ -76,10 +76,10 @@ export default function PortfolioManager() {
 
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
-      return await apiRequest("DELETE", `/api/admin/portfolio/${id}`);
+  return await apiRequest("DELETE", `/api/admin/portfolio/${id}`);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/portfolio"] });
+  queryClient.invalidateQueries({ queryKey: ["/api/portfolio"] });
       toast({
         title: "Успешно",
         description: "Работа удалена",
@@ -139,9 +139,9 @@ export default function PortfolioManager() {
 
   return (
     <Card>
-      <CardHeader>
+    <CardHeader>
         <div className="flex justify-between items-center">
-          <CardTitle>Управление портфолио</CardTitle>
+      <CardTitle>Управление портфолио</CardTitle>
           <Button onClick={() => setIsAdding(true)} size="sm">
             <Plus className="w-4 h-4 mr-2" />
             Добавить работу

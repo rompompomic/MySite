@@ -57,15 +57,47 @@ app.use((req, res, next) => {
   }
 
   // ALWAYS serve the app on the port specified in the environment variable PORT
-  // Other ports are firewalled. Default to 5000 if not specified.
-  // this serves both the API and the client.
-  // It is the only port that is not firewalled.
+  // Default to 5000 if not specified.
   const port = parseInt(process.env.PORT || '5000', 10);
-  server.listen({
-    port,
-    host: "0.0.0.0",
-    reusePort: true,
-  }, () => {
+
+  // Helper to await server.listen by listening for 'listening' and 'error' events
+  const tryListen = (opts: any) => {
+    return new Promise<void>((resolve, reject) => {
+      const onError = (err: any) => {
+        cleanup();
+        reject(err);
+      };
+      const onListening = () => {
+        cleanup();
+        resolve();
+      };
+      function cleanup() {
+        server.off('error', onError);
+        server.off('listening', onListening);
+      }
+
+      server.once('error', onError);
+      server.once('listening', onListening);
+      // use the callback-less form so errors are emitted as events we can catch
+      server.listen(opts);
+    });
+  };
+
+  // Try the intended listen options first (useful in many environments).
+  // On platforms like Windows where `reusePort` or binding to 0.0.0.0 may be unsupported
+  // we'll catch the error and retry on localhost without reusePort.
+  try {
+    await tryListen({ port, host: '0.0.0.0', reusePort: true });
     log(`serving on port ${port}`);
-  });
+  } catch (err: any) {
+    log(`listen failed on 0.0.0.0:${port} -> ${err && err.code ? err.code : err}`);
+    log('Retrying on 127.0.0.1 without reusePort...');
+    try {
+      await tryListen({ port, host: '127.0.0.1' });
+      log(`serving on port ${port} (127.0.0.1)`);
+    } catch (err2: any) {
+      console.error('Failed to start server:', err2);
+      process.exit(1);
+    }
+  }
 })();

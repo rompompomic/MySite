@@ -8,7 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useAdmin } from "@/hooks/use-admin";
 import AdminLayout from "@/components/admin/admin-layout";
 import ProfileEditor from "@/components/admin/profile-editor";
-import PortfolioManager from "@/components/admin/portfolio-manager";
+import CasesManager from "@/components/admin/portfolio-manager";
 import ServicesManager from "@/components/admin/services-manager";
 import VideoManager from "@/components/admin/video-manager";
 import ContactsManager from "@/components/admin/contacts-manager";
@@ -73,7 +73,7 @@ export default function Admin() {
       <div className="space-y-8">
         <ProfileEditor />
         <VideoManager />
-        <PortfolioManager />
+  <CasesManager />
         <ServicesManager />
         <ContactsManager />
       </div>
